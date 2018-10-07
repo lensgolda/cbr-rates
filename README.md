@@ -1,4 +1,4 @@
-# cb-currency-rates
+# cbr-rates
 
 A Clojure library for retrieving Russian Central Bank exchange rates
 
