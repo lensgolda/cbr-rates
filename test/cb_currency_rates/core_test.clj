@@ -8,9 +8,9 @@
 (deftest rates-test
   (testing "Returns currency rates list"
     (with-redefs [client/get (fn [_ _] {:body rates-xml-data})]
-      (is (= [{:name "Австралийский доллар"
+      (is (= (cbr/rates)
+             [{:name "Австралийский доллар"
                :nominal "1"
                :value "44,8568"
                :charcode "AUD"
-               :numcode "036"}]
-             (cbr/rates))))))
+               :numcode "036"}])))))
