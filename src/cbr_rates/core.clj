@@ -24,13 +24,14 @@
 (def ^:private cb-formatter (time-format/formatter "dd/MM/yyyy"))
 
 ;; Receives currencies xml response
-(def ^:private currencies-xml
-  (future (client/get xml-currencies-url {:as "windows-1251"})))
+(defn- currencies-xml
+  []
+  (delay (client/get xml-currencies-url {:as "windows-1251"})))
 
 ;; Receives currency rates xml reponse
 (defn- rates-xml
   [date]
-  (future (client/get (str xml-daily-base-url "?date_req=" date) {:as "windows-1251"})))
+  (delay (client/get (str xml-daily-base-url "?date_req=" date) {:as "windows-1251"})))
 
 ;; Converts XMLElement to clojure map structure
 (defn- elems->map
@@ -67,5 +68,5 @@
 (defn currencies
   "Get currencies list, where each currency contains nominal, currency code and currency name values"
   []
-  (-> currencies-xml
+  (-> (currencies-xml)
       (xml->map :Item)))
