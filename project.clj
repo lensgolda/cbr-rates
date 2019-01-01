@@ -1,4 +1,4 @@
-(defproject cbr-rates "0.1.0"
+(defproject cbr-rates "0.1.0-SNAPSHOT"
   :description "Library for receiving currency rates on a certain date, 
                 from The Central Bank of the Russian Federation"
   :url "https://github.com/lensgolda/cb-currency-rates"
