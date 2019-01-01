@@ -23,15 +23,19 @@
 ;; DateTime formatter for currency rates CBR request
 (def ^:private cb-formatter (time-format/formatter "dd/MM/yyyy"))
 
-;; Receives currencies xml response
-(defn- currencies-xml
-  []
-  (delay (client/get xml-currencies-url {:as "windows-1251"})))
+(defn- get-currencies
+  [url]
+  (client/get url {:as "windows-1251"}))
 
-;; Receives currency rates xml reponse
-(defn- rates-xml
-  [date]
-  (delay (client/get (str xml-daily-base-url "?date_req=" date) {:as "windows-1251"})))
+(defn- get-rates
+  [url date]
+  (client/get (str url "?date_req=" date) {:as "windows-1251"}))
+
+;; Memoized get-currencies
+(def ^:private get-currencies-memo (memoize get-currencies))
+
+;; Memoized get-rates
+(def ^:private get-rates-memo (memoize get-rates))
 
 ;; Converts XMLElement to clojure map structure
 (defn- elems->map
@@ -50,7 +54,7 @@
 ;; Parses XML to Clojure map
 (defn- xml->map
   [xml data-type]
-  (let [data (data-xml/parse-str (:body @xml))]
+  (let [data (data-xml/parse-str (:body xml))]
     (->> (:content data)
          (remove string?)
          (map #(elems->map % data-type)))))
@@ -61,12 +65,12 @@
   ([]
    (rates (time-format/unparse cb-formatter (time/now))))
   ([date]
-   (-> (rates-xml date)
+   (-> (get-rates-memo xml-daily-base-url date)
        (xml->map :Valute))))
 
 ;; Get currencies
 (defn currencies
   "Get currencies list, where each currency contains nominal, currency code and currency name values"
   []
-  (-> (currencies-xml)
+  (-> (get-currencies-memo xml-currencies-url)
       (xml->map :Item)))
