@@ -13,4 +13,6 @@
                    :dependencies [[org.clojure/clojure "1.10.0"]
                                   [reloaded.repl "0.2.4"]]}
              :1.8 {:dependencies [[org.clojure/clojure "1.8.0"]]}
-             :1.9 {:dependencies [[org.clojure/clojure "1.9.0"]]}})
+             :1.9 {:dependencies [[org.clojure/clojure "1.9.0"]]}}
+  :deploy-repositories [["releases" :clojars]
+                        ["snapshots" :clojars]])
